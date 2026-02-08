@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthify - Sign In</title>
+    <meta name="description" content="Sign in to Healthify - Your AI-powered medical triage assistant">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent-green: #38ef7d;
+            --accent-blue: #667eea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            padding: 40px 0;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before,
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.5;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .bg-animation::before {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: -200px;
+            left: -200px;
+        }
+
+        .bg-animation::after {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(50px, 50px) rotate(5deg);
+            }
+
+            50% {
+                transform: translate(0, 100px) rotate(0deg);
+            }
+
+            75% {
+                transform: translate(-50px, 50px) rotate(-5deg);
+            }
+        }
+
+        /* Main Container */
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            padding: 48px 40px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 0 80px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .logo-title {
+            font-size: 32px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .logo-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* Tab Switcher */
+        .tab-switcher {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Form Styles */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        /* Social Login */
+        .social-login {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Remember Me */
+        .remember-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-blue);
+        }
+
+        .forgot-link {
+            color: var(--accent-blue);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--accent-green);
+        }
+
+        /* Guest Button */
+        .guest-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+
+        .guest-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(56, 239, 125, 0.1);
+            border: 1px solid rgba(56, 239, 125, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--accent-green);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 32px 24px;
+            }
+
+            .logo-title {
+                font-size: 28px;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="auth-container">
+        <div class="glass-card">
+            <!-- Logo -->
+            <div class="logo-section">
+                <img src="logo.png" alt="Healthify Logo" class="logo-image">
+                <h1 class="logo-title">Healthify</h1>
+                <p class="logo-subtitle">Verified Care. Voice Activated.</p>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="tab-switcher">
+                <button class="tab-btn active" data-tab="signin">Login</button>
+                <button class="tab-btn" data-tab="signup">Sign Up</button>
+            </div>
+
+            <!-- Error/Success Messages -->
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <!-- Sign In Form -->
+            <form id="signinForm" class="auth-form active">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="signinEmail" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="signinPassword" placeholder="••••••••" required>
+                </div>
+
+                <div class="remember-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="submit-btn">Sign In</button>
+
+                <div class="divider"><span>or continue with</span></div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn" title="Google">🔵</button>
+                    <button type="button" class="social-btn" title="Apple">🍎</button>
+                    <button type="button" class="social-btn" title="Microsoft">🟦</button>
+                </div>
+
+                <button type="button" class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="signupName" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="signupEmail" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="signupPassword" placeholder="••••••••" required
+                        minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="signupConfirm" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Account</button>
+
+                <button type="button" class="guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const forms = document.querySelectorAll('.auth-form');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                forms.forEach(form => {
+                    form.classList.remove('active');
+                    if (form.id === tab + 'Form') {
+                        form.classList.add('active');
+                    }
+                });
+
+                // Clear messages
+                hideMessages();
+            });
+        });
+
+        // Sign In Handler
+        document.getElementById('signinForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('signinEmail').value;
+            const password = document.getElementById('signinPassword').value;
+            const remember = document.getElementById('rememberMe').checked;
+
+            // Get stored users
+            const users = JSON.parse(localStorage.getItem('healthify_users') || '{}');
+
+            if (users[email] && users[email].password === password) {
+                // Login successful
+                const user = {
+                    email: email,
+                    name: users[email].name,
+                    loggedIn: true
+                };
+
+                if (remember) {
+                    localStorage.setItem('healthify_user', JSON.stringify(user));
+                } else {
+                    sessionStorage.setItem('healthify_user', JSON.stringify(user));
+                }
+
+                showSuccess('Login successful! Redirecting...');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } else {
+                showError('Invalid email or password');
+            }
+        });
+
+        // Sign Up Handler
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+
+            if (password !== confirm) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            // Get stored users
+            const users = JSON.parse(localStorage.getItem('healthify_users') || '{}');
+
+            if (users[email]) {
+                showError('An account with this email already exists');
+                return;
+            }
+
+            // Store new user
+            users[email] = {
+                name: name,
+                password: password,
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('healthify_users', JSON.stringify(users));
+
+            // Auto login
+            const user = {
+                email: email,
+                name: name,
+                loggedIn: true
+            };
+            localStorage.setItem('healthify_user', JSON.stringify(user));
+
+            showSuccess('Account created! Redirecting...');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        });
+
+        // Continue as Guest
+        function continueAsGuest() {
+            const user = {
+                email: 'guest',
+                name: 'Guest User',
+                loggedIn: true,
+                isGuest: true
+            };
+            sessionStorage.setItem('healthify_user', JSON.stringify(user));
+            window.location.href = 'index.html';
+        }
+
+        // Show/Hide Messages
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+            document.getElementById('successMessage').classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            const successEl = document.getElementById('successMessage');
+            successEl.textContent = message;
+            successEl.classList.add('show');
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+        }
+
+        // Check if already logged in
+        const existingUser = localStorage.getItem('healthify_user') || sessionStorage.getItem('healthify_user');
+        if (existingUser) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthify - From Symptoms to Solutions</title>
+    <meta name="description"
+        content="Healthify provides AI-powered medical triage guidance based on verified WHO, NHS, and CDC guidelines. Get instant symptom assessment and safe home care advice.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Chat History Sidebar -->
+    <div id="historySidebar" class="history-sidebar">
+        <div class="sidebar-header">
+            <h3>💬 Chat History</h3>
+            <button id="closeSidebar" class="close-sidebar-btn">✕</button>
+        </div>
+        <div id="historyList" class="history-list">
+            <!-- History items will be added here -->
+        </div>
+        <button id="clearHistory" class="clear-history-btn">🗑️ Clear All History</button>
+    </div>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Medicines Sidebar -->
+    <div id="medicinesSidebar" class="medicines-sidebar">
+        <div class="sidebar-header">
+            <h3>💊 Common Medicines</h3>
+            <button id="closeMedicines" class="close-sidebar-btn">✕</button>
+        </div>
+        <div class="medicines-list">
+            <div class="medicine-category">
+                <h4>🤕 Pain & Fever</h4>
+                <div class="medicine-item">
+                    <span class="medicine-name">Paracetamol</span>
+                    <span class="medicine-dose">500mg every 4-6 hours</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Ibuprofen</span>
+                    <span class="medicine-dose">200-400mg every 6-8 hours</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Aspirin</span>
+                    <span class="medicine-dose">300-600mg every 4-6 hours (adults)</span>
+                </div>
+            </div>
+            <div class="medicine-category">
+                <h4>🤧 Cold & Allergies</h4>
+                <div class="medicine-item">
+                    <span class="medicine-name">Cetirizine (Zyrtec)</span>
+                    <span class="medicine-dose">10mg once daily</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Loratadine (Claritin)</span>
+                    <span class="medicine-dose">10mg once daily</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Pseudoephedrine (Sudafed)</span>
+                    <span class="medicine-dose">60mg every 4-6 hours</span>
+                </div>
+            </div>
+            <div class="medicine-category">
+                <h4>🤢 Stomach Issues</h4>
+                <div class="medicine-item">
+                    <span class="medicine-name">Loperamide (Imodium)</span>
+                    <span class="medicine-dose">2mg after each loose stool</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Pepto-Bismol</span>
+                    <span class="medicine-dose">30ml every 30 min (max 8 doses)</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Antacids (Tums)</span>
+                    <span class="medicine-dose">1-2 tablets as needed</span>
+                </div>
+            </div>
+            <div class="medicine-category">
+                <h4>😴 Sleep & Relaxation</h4>
+                <div class="medicine-item">
+                    <span class="medicine-name">Melatonin</span>
+                    <span class="medicine-dose">1-3mg before bed</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Diphenhydramine (Benadryl)</span>
+                    <span class="medicine-dose">25-50mg at bedtime</span>
+                </div>
+            </div>
+            <div class="medicine-category">
+                <h4>🩹 Topical Treatments</h4>
+                <div class="medicine-item">
+                    <span class="medicine-name">Bengay / Icy Hot</span>
+                    <span class="medicine-dose">Apply to affected area 3-4 times daily</span>
+                </div>
+                <div class="medicine-item">
+                    <span class="medicine-name">Hydrocortisone Cream</span>
+                    <span class="medicine-dose">Apply thin layer 2-4 times daily</span>
+                </div>
+            </div>
+        </div>
+        <div class="medicine-warning">
+            ⚠️ Always read package instructions & consult a doctor if symptoms persist
+        </div>
+    </div>
+    <div id="medicinesOverlay" class="sidebar-overlay"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-section">
+                        <div class="logo-icon">🏥</div>
+                        <div>
+                            <h1 class="logo-title">Healthify</h1>
+                            <p class="logo-subtitle">AI Triage Nurse</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="ttsToggle" class="tts-toggle" aria-label="Toggle Text-to-Speech">
+                        <span class="tts-icon">🔊</span>
+                        <span class="tts-label">Voice Support</span>
+                    </button>
+                    <!-- Profile Button -->
+                    <div class="profile-dropdown">
+                        <button id="profileBtn" class="profile-btn" aria-label="Profile">
+                            <span id="profileAvatar" class="profile-avatar">👤</span>
+                            <span id="profileName" class="profile-name">Guest</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div id="profileMenu" class="profile-menu">
+                            <div id="userInfo" class="user-info">
+                                <span id="menuUserName">Guest User</span>
+                                <span id="menuUserEmail">Not signed in</span>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <button id="viewProfile" class="menu-item">👤 View Profile</button>
+                            <button id="historyBtn" class="menu-item">💬 Chat History</button>
+                            <button id="medicinesBtn" class="menu-item">💊 Medicines Guide</button>
+                            <button id="settingsBtn" class="menu-item">⚙️ Settings</button>
+                            <div class="menu-divider"></div>
+                            <button id="logoutBtn" class="menu-item logout">🚪 Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="disclaimer">
+                <span class="disclaimer-icon">⚠️</span>
+                <span>This is guidance only. Not a replacement for professional medical advice.</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content scrollable-content">
+            <!-- Welcome Message -->
+            <div id="welcomeMessage" class="welcome-message">
+                <img src="logo.png" alt="Healthify Logo" class="welcome-logo circular-logo">
+                <h2 id="welcomeText">Hello! I'm Healthify, your virtual triage nurse.</h2>
+                <p>Tell me about your symptoms, and I'll provide guidance based on verified medical sources from WHO,
+                    NHS, and CDC.</p>
+                <div class="example-symptoms">
+                    <p class="example-title">Try asking about:</p>
+                    <div class="example-chips">
+                        <button class="example-chip" data-symptom="I have a sore throat and mild fever">Sore throat &
+                            fever</button>
+                        <button class="example-chip" data-symptom="I have a persistent headache">Headache</button>
+                        <button class="example-chip" data-symptom="I have a cough and runny nose">Cold symptoms</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="chat-messages"></div>
+
+            <!-- Response Card (Hidden by default) -->
+            <div id="responseCard" class="response-card" style="display: none;">
+                <div class="severity-indicator">
+                    <div id="severityBadge" class="severity-badge"></div>
+                    <h3 id="severityTitle" class="severity-title"></h3>
+                </div>
+
+                <div id="spokenResponse" class="spoken-response"></div>
+
+                <div id="detailedPlan" class="detailed-plan"></div>
+
+                <div class="treatment-sections">
+                    <!-- Medications Section -->
+                    <div id="symptomMedicationsSection" class="treatment-section medications-section"
+                        style="display: none;">
+                        <h4 class="section-title">💊 Recommended Medications</h4>
+                        <div id="symptomMedicationsList" class="medications-list"></div>
+                    </div>
+
+                    <!-- Home Remedies Section -->
+                    <div id="symptomRemediesSection" class="treatment-section remedies-section" style="display: none;">
+                        <h4 class="section-title">🏠 Home Remedies</h4>
+                        <ul id="symptomRemediesList" class="remedies-list"></ul>
+                    </div>
+                </div>
+
+                <div class="verified-sources">
+                    <h4 class="sources-title">📚 Verified Medical Sources</h4>
+                    <div id="sourcesList" class="sources-list"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <!-- Mode Tabs -->
+            <div class="input-tabs">
+                <button id="symptomTab" class="input-tab active" data-mode="symptoms">
+                    <span class="tab-icon">💬</span> Symptoms
+                </button>
+                <button id="skinTab" class="input-tab" data-mode="skin">
+                    <span class="tab-icon">📷</span> Skin Analysis
+                </button>
+            </div>
+
+            <!-- Symptoms Input Mode -->
+            <div id="symptomsMode" class="input-mode active">
+                <div class="input-container">
+                    <textarea id="symptomInput" class="symptom-input"
+                        placeholder="Describe your symptoms here... (e.g., 'I have a sore throat and fever for 2 days')"
+                        rows="1" aria-label="Symptom description input"></textarea>
+                    <button id="analyzeBtn" class="analyze-btn" aria-label="Analyze symptoms">
+                        <span class="btn-text">Analyze</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Skin Analysis Mode -->
+            <div id="skinMode" class="input-mode">
+                <div class="skin-upload-container">
+                    <div id="uploadArea" class="upload-area">
+                        <input type="file" id="skinImageInput" accept="image/*" hidden>
+                        <div class="upload-content">
+                            <span class="upload-icon">📷</span>
+                            <p class="upload-text">Click or drag to upload skin photo</p>
+                            <p class="upload-hint">JPG, PNG up to 10MB</p>
+                        </div>
+                        <div id="imagePreview" class="image-preview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                            <button id="removeImage" class="remove-image-btn">✕</button>
+                        </div>
+                    </div>
+                    <div class="skin-description-container">
+                        <textarea id="skinDescription" class="skin-description-input"
+                            placeholder="Describe what you see... (e.g., 'red itchy rash on arm', 'dry patches', 'pimples on face')"
+                            rows="2"></textarea>
+                        <button id="analyzeSkinBtn" class="analyze-btn" aria-label="Analyze skin">
+                            <span class="btn-text">Analyze Skin</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="loading-spinner"></div>
+                <span>Analyzing your symptoms...</span>
+            </div>
+        </div>
+
+        <!-- Skin Analysis Response Card -->
+        <div id="skinResponseCard" class="skin-response-card" style="display: none;">
+            <div class="severity-indicator">
+                <div id="skinSeverityBadge" class="severity-badge"></div>
+                <div class="condition-info">
+                    <h3 id="conditionName" class="condition-name"></h3>
+                    <p id="conditionDescription" class="condition-description"></p>
+                </div>
+            </div>
+
+            <div class="treatment-sections">
+                <!-- Medications Section -->
+                <div class="treatment-section medications-section">
+                    <h4 class="section-title">💊 Recommended Medications</h4>
+                    <div id="medicationsList" class="medications-list"></div>
+                </div>
+
+                <!-- Home Remedies Section -->
+                <div class="treatment-section remedies-section">
+                    <h4 class="section-title">🏠 Home Remedies</h4>
+                    <ul id="remediesList" class="remedies-list"></ul>
+                </div>
+
+                <!-- When to See Doctor -->
+                <div class="treatment-section warning-section">
+                    <h4 class="section-title">⚠️ When to See a Doctor</h4>
+                    <p id="whenToSeeDoctor" class="warning-text"></p>
+                </div>
+            </div>
+
+            <div class="verified-sources">
+                <h4 class="sources-title">📚 Verified Medical Sources</h4>
+                <div id="skinSourcesList" class="sources-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content glass-modal">
+            <div class="modal-header">
+                <h2>👤 Your Profile</h2>
+                <button id="closeProfileModal" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-info-section">
+                    <div class="profile-avatar-large">👤</div>
+                    <div class="profile-details">
+                        <p><strong>Name:</strong> <span id="modalUserName">Guest User</span></p>
+                        <p><strong>Email:</strong> <span id="modalUserEmail">Not signed in</span></p>
+                        <p><strong>Member Since:</strong> <span id="modalMemberSince">N/A</span></p>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalChats">0</span>
+                        <span class="stat-label">Total Chats</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="thisMonth">0</span>
+                        <span class="stat-label">This Month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
